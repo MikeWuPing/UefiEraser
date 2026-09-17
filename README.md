@@ -237,6 +237,7 @@ EraserPkg/
 ├── EraserPkg.dec / EraserPkg.dsc
 ├── Include/Library/
 ├── Library/FixedDebugPrintErrorLevelLib/
+├── Docs/Images/    界面截图与演示动画（README 用图）
 └── Application/UefiEraser/
     ├── Core/        擦除算法表、擦除引擎、目标模型、PRNG
     ├── Platform/    块设备枚举、分区映射、覆写、空闲空间、ATA/NVMe 设备级、日志持久化
@@ -527,6 +528,7 @@ EraserPkg/
 ├── EraserPkg.dec / EraserPkg.dsc
 ├── Include/Library/
 ├── Library/FixedDebugPrintErrorLevelLib/
+├── Docs/Images/    screenshots and the demo animation (used by this README)
 └── Application/UefiEraser/
     ├── Core/        erasure algorithm table, engine, target model, PRNG
     ├── Platform/    block-device enumeration, partition mapping, overwrite,
