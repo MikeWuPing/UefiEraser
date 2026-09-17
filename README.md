@@ -6,7 +6,7 @@
 > 执行不可恢复的数据销毁。支持 13 种行业标准多遍覆写算法，以及 ATA Secure Erase /
 > NVMe Format / NVMe Sanitize 设备级擦除。
 
-![UefiEraser 主界面](https://github.com/MikeWuPing/UefiEraser/releases/download/v0.1.0.71/01-main.png)
+![UefiEraser 主界面](EraserPkg/Docs/Images/01-main.png)
 
 > ⚠️ **擦除不可恢复**。本工具用于销毁数据，操作前请确认目标与备份。
 
@@ -17,7 +17,7 @@
 | 文件 | 说明 |
 |---|---|
 | [UefiEraser-0.1.0.71-X64.efi](https://github.com/MikeWuPing/UefiEraser/releases/download/v0.1.0.71/UefiEraser-0.1.0.71-X64.efi) | 可直接运行的 UEFI 应用程序（X64，Debug 版，内置中文界面与字库） |
-| [UefiEraser-产品手册-0.1.0.71.docx](https://github.com/MikeWuPing/UefiEraser/releases/download/v0.1.0.71/UefiEraser-产品手册-0.1.0.71.docx) | 产品说明书（Word，含全部界面截图与功能详解） |
+| [UefiEraser-产品手册-0.1.0.71.docx](https://github.com/MikeWuPing/UefiEraser/releases/download/v0.1.0.71/UefiEraser-Manual-zh-0.1.0.71.docx) | 产品说明书（Word，含全部界面截图与功能详解） |
 
 最新版本见 [Releases](https://github.com/MikeWuPing/UefiEraser/releases)。把 `UefiEraser.efi`
 拷到 FAT 格式的 U 盘，开机从 U 盘启动进入 UEFI Shell 即可运行（Secure Boot 需关闭）。
@@ -71,29 +71,29 @@ UefiEraser 就跑在这个位置：开机、操作系统还没起来，固件把
 
 | 目标选择（可多选） | 算法选择器（上半覆写 / 下半设备级） |
 |---|---|
-| ![目标选择](https://github.com/MikeWuPing/UefiEraser/releases/download/v0.1.0.71/02-multi-select.png) | ![算法选择](https://github.com/MikeWuPing/UefiEraser/releases/download/v0.1.0.71/04-algorithm.png) |
+| ![目标选择](EraserPkg/Docs/Images/02-multi-select.png) | ![算法选择](EraserPkg/Docs/Images/04-algorithm.png) |
 
 | 摘要核对（第 3 道闸门） | 输入 ERASE（第 4 道） |
 |---|---|
-| ![摘要确认](https://github.com/MikeWuPing/UefiEraser/releases/download/v0.1.0.71/05-summary.png) | ![ERASE 闸门](https://github.com/MikeWuPing/UefiEraser/releases/download/v0.1.0.71/06-gate-erase.png) |
+| ![摘要确认](EraserPkg/Docs/Images/05-summary.png) | ![ERASE 闸门](EraserPkg/Docs/Images/06-gate-erase.png) |
 
 | 整盘容量确认（第 5 道） | 擦除进度（可持续取消） |
 |---|---|
-| ![容量闸门](https://github.com/MikeWuPing/UefiEraser/releases/download/v0.1.0.71/07-gate-capacity.png) | ![进度](https://github.com/MikeWuPing/UefiEraser/releases/download/v0.1.0.71/09-progress-later.png) |
+| ![容量闸门](EraserPkg/Docs/Images/07-gate-capacity.png) | ![进度](EraserPkg/Docs/Images/09-progress-later.png) |
 
 | 结果报告 | 擦除后目标列表自动变干净 |
 |---|---|
-| ![结果报告](https://github.com/MikeWuPing/UefiEraser/releases/download/v0.1.0.71/10-report.png) | ![擦后列表](https://github.com/MikeWuPing/UefiEraser/releases/download/v0.1.0.71/11-after-erase.png) |
+| ![结果报告](EraserPkg/Docs/Images/10-report.png) | ![擦后列表](EraserPkg/Docs/Images/11-after-erase.png) |
 
 | 操作菜单（末项红色退出） | 导出报告结果弹窗 |
 |---|---|
-| ![操作菜单](https://github.com/MikeWuPing/UefiEraser/releases/download/v0.1.0.71/13-menu-open.png) | ![导出成功](https://github.com/MikeWuPing/UefiEraser/releases/download/v0.1.0.71/14-export-notice.png) |
+| ![操作菜单](EraserPkg/Docs/Images/13-menu-open.png) | ![导出成功](EraserPkg/Docs/Images/14-export-notice.png) |
 
 | 不可选目标的提示条 | Tab 焦点（蓝色描边，键盘可达） |
 |---|---|
-| ![提示条](https://github.com/MikeWuPing/UefiEraser/releases/download/v0.1.0.71/03-hint-select-all.png) | ![Tab 焦点](https://github.com/MikeWuPing/UefiEraser/releases/download/v0.1.0.71/15-tab-toolbar.png) |
+| ![提示条](EraserPkg/Docs/Images/03-hint-select-all.png) | ![Tab 焦点](EraserPkg/Docs/Images/15-tab-toolbar.png) |
 
-![功能演示](https://github.com/MikeWuPing/UefiEraser/releases/download/v0.1.0.71/demo.gif)
+![功能演示](EraserPkg/Docs/Images/demo.gif)
 
 ## 为什么算法是单选
 
@@ -263,7 +263,7 @@ GPLv3，仅作对照参考、不参与编译、不含在本仓内。
 > with 13 industry-standard multi-pass overwrite algorithms, or hand the job to the
 > drive firmware via ATA Secure Erase / NVMe Format / NVMe Sanitize.
 
-![UefiEraser main window](https://github.com/MikeWuPing/UefiEraser/releases/download/v0.1.0.71/01-main.png)
+![UefiEraser main window](EraserPkg/Docs/Images/01-main.png)
 
 > ⚠️ **Erasure is irreversible.** This tool destroys data — check the target and
 > your backups before you start.
@@ -273,7 +273,7 @@ GPLv3，仅作对照参考、不参与编译、不含在本仓内。
 | File | What it is |
 |---|---|
 | [UefiEraser-0.1.0.71-X64.efi](https://github.com/MikeWuPing/UefiEraser/releases/download/v0.1.0.71/UefiEraser-0.1.0.71-X64.efi) | the ready-to-run UEFI application (X64, debug build, Chinese UI and font baked in) |
-| [UefiEraser-产品手册-0.1.0.71.docx](https://github.com/MikeWuPing/UefiEraser/releases/download/v0.1.0.71/UefiEraser-产品手册-0.1.0.71.docx) | the product manual (Word, with every screen illustrated) |
+| [UefiEraser-产品手册-0.1.0.71.docx](https://github.com/MikeWuPing/UefiEraser/releases/download/v0.1.0.71/UefiEraser-Manual-zh-0.1.0.71.docx) | the product manual (Word, with every screen illustrated) |
 
 See [Releases](https://github.com/MikeWuPing/UefiEraser/releases) for the latest version.
 Copy `UefiEraser.efi` to a FAT-formatted USB stick, boot from it into the UEFI Shell and
@@ -347,29 +347,29 @@ hands over every disk as a plain block device.
 
 | Target selection (multi-select) | Algorithm picker (overwrite above, device-level below) |
 |---|---|
-| ![target selection](https://github.com/MikeWuPing/UefiEraser/releases/download/v0.1.0.71/02-multi-select.png) | ![algorithm picker](https://github.com/MikeWuPing/UefiEraser/releases/download/v0.1.0.71/04-algorithm.png) |
+| ![target selection](EraserPkg/Docs/Images/02-multi-select.png) | ![algorithm picker](EraserPkg/Docs/Images/04-algorithm.png) |
 
 | Summary (gate 3) | Type ERASE (gate 4) |
 |---|---|
-| ![summary](https://github.com/MikeWuPing/UefiEraser/releases/download/v0.1.0.71/05-summary.png) | ![ERASE gate](https://github.com/MikeWuPing/UefiEraser/releases/download/v0.1.0.71/06-gate-erase.png) |
+| ![summary](EraserPkg/Docs/Images/05-summary.png) | ![ERASE gate](EraserPkg/Docs/Images/06-gate-erase.png) |
 
 | Capacity (gate 5) | Progress (cancellable throughout) |
 |---|---|
-| ![capacity gate](https://github.com/MikeWuPing/UefiEraser/releases/download/v0.1.0.71/07-gate-capacity.png) | ![progress](https://github.com/MikeWuPing/UefiEraser/releases/download/v0.1.0.71/09-progress-later.png) |
+| ![capacity gate](EraserPkg/Docs/Images/07-gate-capacity.png) | ![progress](EraserPkg/Docs/Images/09-progress-later.png) |
 
 | Result report | The list cleans itself up after an erasure |
 |---|---|
-| ![report](https://github.com/MikeWuPing/UefiEraser/releases/download/v0.1.0.71/10-report.png) | ![after erase](https://github.com/MikeWuPing/UefiEraser/releases/download/v0.1.0.71/11-after-erase.png) |
+| ![report](EraserPkg/Docs/Images/10-report.png) | ![after erase](EraserPkg/Docs/Images/11-after-erase.png) |
 
 | Actions menu (red Quit at the end) | Export result popup |
 |---|---|
-| ![actions menu](https://github.com/MikeWuPing/UefiEraser/releases/download/v0.1.0.71/13-menu-open.png) | ![export popup](https://github.com/MikeWuPing/UefiEraser/releases/download/v0.1.0.71/14-export-notice.png) |
+| ![actions menu](EraserPkg/Docs/Images/13-menu-open.png) | ![export popup](EraserPkg/Docs/Images/14-export-notice.png) |
 
 | Hint bar for an unselectable target | Tab focus (blue ring, keyboard reachable) |
 |---|---|
-| ![hint bar](https://github.com/MikeWuPing/UefiEraser/releases/download/v0.1.0.71/03-hint-select-all.png) | ![tab focus](https://github.com/MikeWuPing/UefiEraser/releases/download/v0.1.0.71/15-tab-toolbar.png) |
+| ![hint bar](EraserPkg/Docs/Images/03-hint-select-all.png) | ![tab focus](EraserPkg/Docs/Images/15-tab-toolbar.png) |
 
-![demo](https://github.com/MikeWuPing/UefiEraser/releases/download/v0.1.0.71/demo.gif)
+![demo](EraserPkg/Docs/Images/demo.gif)
 
 ## Why one algorithm per run
 
