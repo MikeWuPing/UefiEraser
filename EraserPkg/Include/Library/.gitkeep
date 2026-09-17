@@ -1,0 +1,6 @@
+Placeholder so EraserPkg.dec's [Includes] path exists.
+
+Public interface headers for this package's own libraries live here, e.g.:
+  EraseAlgo.h / EraseEngine.h / EraseReport.h   (Core layer, M3)
+These are host-compilable plain C headers: they must not include <Uefi.h>,
+so the same sources can be unit-tested off-target (see tools/Build-HostTests).

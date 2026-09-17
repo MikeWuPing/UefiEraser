@@ -1,0 +1,19 @@
+## @file
+# EraserPkg package declaration.
+#
+# Provides the Include/ search root for the UefiEraser application package.
+# Pure ASCII only: BaseTools parses meta files with the cp936 code page, and
+# non-ASCII bytes can break the parser.
+#
+# Copyright (c) 2026, Mike Wu. All rights reserved.
+#
+##
+
+[Defines]
+  DEC_SPECIFICATION              = 0x00010005
+  PACKAGE_NAME                   = EraserPkg
+  PACKAGE_GUID                   = 3E7B41D9-5A28-4C6F-9E13-8B4D2A6F7C10
+  PACKAGE_VERSION                = 0.1
+
+[Includes]
+  Include

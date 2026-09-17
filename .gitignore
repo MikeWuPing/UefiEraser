@@ -1,0 +1,20 @@
+# EDK II 构建输出
+Build/
+*.obj
+*.pdb
+*.exe
+*.efi
+*.lib
+*.dll
+
+# 编辑器 / 工具
+.vs/
+.vscode/
+__pycache__/
+*.user
+*.suo
+
+# 会话与临时产物
+.vs/
+.DS_Store
+Thumbs.db

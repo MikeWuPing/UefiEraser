@@ -1,0 +1,28 @@
+## @file
+# DebugPrintErrorLevelLib instance returning a fixed mask.
+#
+# BaseDebugLibSerialPort needs DebugPrintErrorLevelLib, whose stock
+# MdePkg instance reads PcdDebugPrintErrorLevel through PcdLib. This
+# package maps PcdLib to BasePcdLibNull, and the null instance returns
+# 0 (plus an ASSERT that would recurse back into DebugLib), which would
+# silently kill the serial log. Returning a fixed mask keeps the QEMU
+# "-serial file:" version/assertion channel deterministic on any
+# firmware, independent of the host PCD database.
+#
+# Copyright (c) 2026, Mike Wu. All rights reserved.
+#
+##
+
+[Defines]
+  INF_VERSION                    = 0x00010005
+  BASE_NAME                      = FixedDebugPrintErrorLevelLib
+  FILE_GUID                      = 4D8F2B63-7E15-4A9C-8F30-2B6D9E4C7A51
+  MODULE_TYPE                    = BASE
+  VERSION_STRING                 = 1.0
+  LIBRARY_CLASS                  = DebugPrintErrorLevelLib
+
+[Packages]
+  MdePkg/MdePkg.dec
+
+[Sources]
+  FixedDebugPrintErrorLevelLib.c

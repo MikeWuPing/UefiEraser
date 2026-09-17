@@ -1,0 +1,114 @@
+## @file
+# UefiEraser UEFI application module.
+#
+# ENTRY_POINT is UefiMain, reached through UefiApplicationEntryPoint.
+# /utf-8 is required, not cosmetic: every Ui and Core source carries UTF-8
+# Chinese UI strings, and without it MSVC decodes them as cp936, which splices
+# lines together and produces bogus syntax errors.
+# /wd4100 silences the unreferenced-parameter warnings that EDK II entry
+# prototypes trigger.
+#
+# Copyright (c) 2026, Mike Wu. All rights reserved.
+#
+##
+
+[Defines]
+  INF_VERSION                    = 0x00010005
+  BASE_NAME                      = UefiEraser
+  FILE_GUID                      = 9C4E7A15-3D82-4F60-B1E9-6A2C5D8F3B47
+  MODULE_TYPE                    = UEFI_APPLICATION
+  VERSION_STRING                 = 0.1
+  ENTRY_POINT                    = UefiMain
+
+[BuildOptions]
+  MSFT:*_*_*_CC_FLAGS = /DEDK2_BUILD /utf-8 /wd4819 /wd4100
+  MSFT:*_*_*_LINK_FLAGS = /SUBSYSTEM:EFI_APPLICATION
+
+[Sources]
+  UefiMain.c
+
+  # Core: UEFI-free logic. Core/Port.h selects between stdint and Uefi.h so the
+  # same files also compile on the host (tools/hosttests).
+  Core/Port.h
+  Core/Prng.h
+  Core/TargetModel.h
+  Core/EraseAlgo.h
+  Core/EraseAlgo.c
+  Core/EraseEngine.h
+  Core/EraseEngine.c
+
+  Platform/BlockDevice.h
+  Platform/BlockDevice.c
+  Platform/PartitionMap.h
+  Platform/PartitionMap.c
+  Platform/OverwriteErase.h
+  Platform/OverwriteErase.c
+  Platform/HeadlessErase.h
+  Platform/HeadlessErase.c
+  Platform/TextConv.h
+  Platform/TextConv.c
+  Platform/FreeSpaceWipe.h
+  Platform/FreeSpaceWipe.c
+  Platform/AtaErase.h
+  Platform/AtaErase.c
+  Platform/NvmeErase.h
+  Platform/NvmeErase.c
+  Platform/LogPersist.h
+  Platform/LogPersist.c
+
+  Ui/AppCtx.h
+  Ui/MainWindow.h
+  Ui/MainWindow.c
+  Ui/Dialogs.h
+  Ui/Dialogs.c
+  # LvglPkg's frosted-glass session (LvglGlass + LvglTheme) and its transition
+  # library (LvglTrans) both ride in with the LvglUefiPort library class.
+  Ui/GlassChrome.h
+  Ui/GlassChrome.c
+
+[Packages]
+  MdePkg/MdePkg.dec
+  LvglPkg/LvglPkg.dec
+  EraserPkg/EraserPkg.dec
+
+[Protocols]
+  # Enumeration and raw I/O.
+  gEfiBlockIoProtocolGuid             ## CONSUMES
+  # Boot-volume detection: the running image's DeviceHandle path is compared
+  # against each block device's path. (EFI_PARTITION_INFO_PROTOCOL is NOT used:
+  # it describes a partition's own entry and carries no parent handle, so
+  # parent linkage is done by device-path prefix matching instead.)
+  gEfiDevicePathProtocolGuid          ## CONSUMES
+  gEfiLoadedImageProtocolGuid         ## CONSUMES
+  # Headless mode reads its arguments from the shell command line. (MdePkg's
+  # ShellParameters.h: no ShellPkg dependency needed just for argv.)
+  gEfiShellParametersProtocolGuid     ## SOMETIMES_CONSUMES
+  # Headless mode falls back to UefiEraser.cfg on the boot volume, which needs
+  # the volume's file system protocol.
+  gEfiSimpleFileSystemProtocolGuid    ## SOMETIMES_CONSUMES
+  # Device-level erasure. ATA Secure Erase goes through ATA pass-thru because
+  # EFI_STORAGE_SECURITY_COMMAND_PROTOCOL only issues TRUSTED SEND/RECEIVE and
+  # cannot reach SECURITY ERASE UNIT (0xF4). NVMe Format/Sanitize are Admin
+  # queue commands, so they need the NVMe pass-thru protocol.
+  gEfiAtaPassThruProtocolGuid         ## SOMETIMES_CONSUMES
+  gEfiNvmExpressPassThruProtocolGuid  ## SOMETIMES_CONSUMES
+
+[Guids]
+  # Needed to size the config file via EFI_FILE_PROTOCOL.GetInfo. Without this
+  # declaration the GUID has no definition anywhere and the link fails with
+  # "LNK2001: unresolved external symbol gEfiFileInfoGuid".
+  gEfiFileInfoGuid                    ## SOMETIMES_CONSUMES
+
+[LibraryClasses]
+  UefiLib
+  UefiApplicationEntryPoint
+  BaseLib
+  BaseMemoryLib
+  MemoryAllocationLib
+  DebugLib
+  UefiBootServicesTableLib
+  UefiRuntimeServicesTableLib
+  PrintLib
+  DevicePathLib
+  LvglLib
+  LvglUefiPort
