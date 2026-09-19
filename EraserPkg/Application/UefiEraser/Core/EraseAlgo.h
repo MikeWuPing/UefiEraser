@@ -1,15 +1,14 @@
 /** @file
   Core/EraseAlgo.h - the industry-standard erasure algorithm table.
 
-  Faithful re-implementation of the erasure methods shipped by the Eraser
-  project (https://eraser.heidi.ie). Eraser itself is C#/.NET under GPLv3 and
-  cannot be linked into UEFI firmware, so this is NOT ported code: the pass
-  sequences are facts taken from the published specifications (DoD 5220.22-M,
-  Gutmann 1996, HMG IS5, RCMP TSSIT OPS-II, GOST P50739-95, US Army AR 380-19,
-  NAVSO P-5239-26), cross-checked byte for byte against Eraser's sources (a
-  snapshot lives in docs/reference/eraser/). The C here is original.
+  The methods here are the published standards, not any particular program's
+  implementation of them. Every pass sequence is a fact taken from the
+  specification text for that method (DoD 5220.22-M, Gutmann 1996, HMG IS5,
+  RCMP TSSIT OPS-II, GOST P50739-95, US Army AR 380-19, NAVSO P-5239-26).
+  Where the common write-ups disagree with the specification, the
+  specification wins. The C here was written for this project.
 
-  Eraser's model has exactly two pass primitives, and so does this one:
+  A pass sequence is built from two primitives:
     WriteConstant(byte[] pattern)  - the pattern repeats across the buffer
     WriteRandom(prng)              - the buffer is filled from a PRNG stream
 

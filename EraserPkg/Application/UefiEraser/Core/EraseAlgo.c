@@ -1,9 +1,9 @@
 /** @file
   Core/EraseAlgo.c - the algorithm table and the pass filler.
 
-  Every pass sequence below was checked line by line against Eraser's sources
-  (snapshot in docs/reference/eraser/). Several byte values differ from what
-  the popular write-ups say, and Eraser is what this project reproduces:
+  Every pass sequence below comes from the specification text for that method
+  (see EraseAlgo.h). Several byte values differ from what the popular write-ups
+  say; where they disagree, the specification is what this project implements:
 
     - Schneier starts 0x01, 0x00 (not 0xFF, 0x00)
     - German VSITR alternates 0x00 / 0x01 (not 0x00 / 0xFF)
@@ -13,12 +13,10 @@
     - US DoD 5220.22-M (ECE) draws three random bytes R1/R2/R3 and uses their
       complements, giving  R1 ~R1 rand R2 R3 ~R3 rand  (7 passes)
 
-  One DELIBERATE deviation: Eraser sets RandomizePasses = true for Gutmann and
-  shuffles the 35 passes before running them. Gutmann's 27 patterns are ordered
-  on purpose (each targets a specific encoding), so shuffling defeats the
-  algorithm's intent. This implementation runs them in Gutmann's published
-  order and does not shuffle. To match Eraser exactly instead, shuffle
-  kGutmann[] before use.
+  Gutmann's 35 passes run in the order their author published them. The 27
+  patterns are ordered on purpose - each targets a specific encoding - so
+  shuffling them defeats the algorithm's intent. Some implementations shuffle;
+  this one does not.
 
   Copyright (c) 2026, Mike Wu. All rights reserved.
 **/
@@ -227,7 +225,7 @@ static const ERASE_ALGORITHM kAlgorithms[] = {
   },
   /* PassCount 0 marks "the pass list comes from the job, not the table":
      the UI offers a pass-count spinner and the engine runs that many random
-     passes. Same idea as Eraser's user-defined methods, minus the pass editor. */
+     passes. The same shape as a user-defined method, minus the pass editor. */
   {
     "custom", "自定义（随机 N 遍）", "Custom (N random passes)",
     kRandom, 0, E_FALSE

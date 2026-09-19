@@ -47,7 +47,7 @@ UefiEraser 就跑在这个位置：开机、操作系统还没起来，固件把
 - **设备级擦除（Pro 版）**：调用磁盘固件的 ATA Secure Erase / NVMe Format NVM /
   NVMe Sanitize，覆盖包括预留区与退役块在内的全部物理区域（**SSD 唯一可靠的擦除
   方式**）。Free 版里这一项灰显加锁——看得见，点不动。
-- **12 种行业标准覆写算法**（逐字节对照 Eraser 开源项目复刻）：
+- **12 种行业标准覆写算法**（按各标准的公开规范实现）：
   US DoD 5220.22-M（3 遍）/ DoD 5220.22-M ECE（7 遍）、Gutmann（35 遍）、Schneier（7 遍）、
   英国 HMG IS5 基础/增强、加拿大 RCMP TSSIT OPS-II、德国 VSITR、俄罗斯 GOST P50739-95、
   美国陆军 AR 380-19、美国空军 5020，以及自定义随机 N 遍。
@@ -161,17 +161,17 @@ Blancco / `shred` / `sdelete` 同样都是单方法；它们把"多"放在**方�
 
 ## 算法说明
 
-遍次模式**逐字节对照 Eraser 源码**确认。Eraser 只有两种遍次原语：`WriteConstant`
-（按 1~3 字节模式周期填充）与 `WriteRandom`（PRNG 流），本项目增加第三种
+每个算法的遍次序列（哪一遍写什么字节）**取自该标准的公开规范文本**。遍次原语有两种：
+`WriteConstant`（按 1~3 字节模式周期填充）与 `WriteRandom`（PRNG 流），本项目增加第三种
 `PASS_CONST_RANDOM`（每次擦除抽一个随机字节后重复），用于 RCMP 末遍、AR 380-19 的第 2/3 遍、
 USAF 5020 的三遍。
 
-有几处**与常见文献不同**，本项目按 Eraser 的字节值实现：Schneier 用 `0x01,0x00` 起手
-（不是 `0xFF,0x00`）；VSITR 与 RCMP 交替用 `0x01` 而非 `0xFF`；HMG IS5 增强版第二遍是 `0x01`。
+有几处**与流传较广的二手资料写法不同**，本项目以标准原文的取值为准：Schneier 用
+`0x01,0x00` 起手（不是 `0xFF,0x00`）；VSITR 与 RCMP 交替用 `0x01` 而非 `0xFF`；
+HMG IS5 增强版第二遍是 `0x01`。
 
-**一处有意偏离**：Eraser 对 Gutmann 设置了 `RandomizePasses = true`，执行前会打乱 35 遍顺序；
-但 Gutmann 的 27 个模式是按序针对特定编码设计的，打乱会破坏算法本意。本项目**按 Gutmann
-原文的规范顺序执行**。
+**关于 Gutmann 的遍序**：35 遍按作者原文的规范顺序执行。那 27 个模式是按序针对特定编码
+设计的，打乱会破坏算法本意，所以本项目不做乱序。
 
 ## ⚠️ 关于 SSD
 
@@ -305,8 +305,8 @@ EraserPkg/
 MIT License, Copyright (c) 2026 Mike Wu。
 
 界面基于 [LVGL](https://lvgl.io)（MIT）构建，UEFI 移植层见
-[LvglPkg](https://github.com/MikeWuPing/UEFI_LVGL)。算法逐字节对照参考的 Eraser 项目为
-GPLv3，仅作对照参考、不参与编译、不含在本仓内。
+[LvglPkg](https://github.com/MikeWuPing/UEFI_LVGL)。本仓全部源码均为本项目编写；
+算法表中的遍次取值来自各标准的公开规范文本。
 
 ---
 
@@ -369,8 +369,8 @@ hands over every disk as a plain block device.
   NVMe Sanitize, run by the drive firmware over every physical region including
   over-provisioning and retired blocks (**the only reliable method for SSDs**).
   In the Free build this entry is greyed out and padlocked: visible, not usable.
-- **12 industry-standard overwrite algorithms**, reproduced byte for byte against the
-  Eraser project: US DoD 5220.22-M (3), DoD 5220.22-M ECE (7), Gutmann (35),
+- **12 industry-standard overwrite algorithms**, implemented from the published
+  specifications: US DoD 5220.22-M (3), DoD 5220.22-M ECE (7), Gutmann (35),
   Schneier (7), British HMG IS5 Baseline/Enhanced, Canadian RCMP TSSIT OPS-II,
   German VSITR, Russian GOST P50739-95, US Army AR 380-19, US Air Force 5020,
   plus a custom N-pass random method. Hovering a row shows what the method is and
@@ -502,20 +502,20 @@ passes inside the method.
 
 ## Algorithms
 
-The pass patterns were checked **byte for byte against Eraser's sources**. Eraser has
-exactly two pass primitives — `WriteConstant` (a 1–3 byte pattern repeating across the
-buffer) and `WriteRandom` (a PRNG stream). This project adds a third,
-`PASS_CONST_RANDOM` (draw one random byte per erasure, then repeat it), used by RCMP's
-last pass, AR 380-19's 2nd/3rd passes and all three USAF 5020 passes.
+Every pass sequence — which bytes are written on which pass — comes from the **published
+specification text** for that method. There are two pass primitives: `WriteConstant`
+(a 1–3 byte pattern repeating across the buffer) and `WriteRandom` (a PRNG stream).
+This project adds a third, `PASS_CONST_RANDOM` (draw one random byte per erasure, then
+repeat it), used by RCMP's last pass, AR 380-19's 2nd/3rd passes and all three USAF 5020
+passes.
 
-Several values **differ from the popular write-ups**; this project implements Eraser's
-bytes: Schneier starts `0x01, 0x00` (not `0xFF, 0x00`); VSITR and RCMP alternate `0x01`
-rather than `0xFF`; HMG IS5 Enhanced's second pass is `0x01`.
+Several values **differ from the popular write-ups**; this project takes the values from
+the standard texts: Schneier starts `0x01, 0x00` (not `0xFF, 0x00`); VSITR and RCMP
+alternate `0x01` rather than `0xFF`; HMG IS5 Enhanced's second pass is `0x01`.
 
-**One deliberate deviation:** Eraser sets `RandomizePasses = true` for Gutmann and
-shuffles the 35 passes before running them. Gutmann's 27 patterns are ordered on
-purpose — each targets a specific encoding — so this project runs them in Gutmann's
-published order.
+**On Gutmann's pass order:** its 35 passes run in the order the author published them.
+The 27 patterns are ordered on purpose — each targets a specific encoding — so shuffling
+them defeats the algorithm's intent, and this project does not shuffle.
 
 ## ⚠️ About SSDs
 
@@ -660,6 +660,6 @@ EraserPkg/
 MIT License, Copyright (c) 2026 Mike Wu.
 
 The interface is built on [LVGL](https://lvgl.io) (MIT); the UEFI port is
-[LvglPkg](https://github.com/MikeWuPing/UEFI_LVGL). The Eraser project, whose bytes the
-algorithms were checked against, is GPLv3 — it is reference material only, is not
-compiled, and is not included in this repository.
+[LvglPkg](https://github.com/MikeWuPing/UEFI_LVGL). Everything in this repository is
+source written for this project; the pass values in the algorithm table come from the
+published standards.

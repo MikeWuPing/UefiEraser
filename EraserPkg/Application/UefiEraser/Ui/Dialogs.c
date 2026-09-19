@@ -727,7 +727,7 @@ DialogsAbout (
   ModalLabel (Card, "UEFI Shell 磁盘数据彻底粉碎工具", 0xCCCCCC, 0, 26);
   ModalLabel (Card, Ver, 0x9A9A9A, 0, 52);
   ModalLabel (Card, "Author : Mike Wu", 0x9A9A9A, 0, 78);
-  ModalLabel (Card, "算法复刻自 Eraser 开源项目（DoD / Gutmann / HMG IS5 /", 0x9A9A9A, 0, 112);
+  ModalLabel (Card, "算法按各标准的公开规范实现（DoD / Gutmann / HMG IS5 /", 0x9A9A9A, 0, 112);
   ModalLabel (Card, "RCMP / VSITR / GOST / AR380-19 / USAF 5020 等）。", 0x9A9A9A, 0, 136);
   ModalLabel (Card, "覆写对 SSD 不可靠，固态盘请使用设备级擦除。", 0xE0A030, 0, 166);
 

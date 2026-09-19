@@ -6,7 +6,7 @@
   progress logic unit-testable on the host against an in-memory buffer, with no
   emulator in the loop.
 
-  Pass semantics match Eraser's PassBasedErasureMethod:
+  Pass semantics (one pass rewrites the whole target range):
     - every pass rewrites the WHOLE target range from TargetOffset
     - PASS_CONSTANT repeats its pattern (period 1..3) across each chunk, and
       because ChunkSize is a multiple of 3, 4, 512 and 1024 the pattern never

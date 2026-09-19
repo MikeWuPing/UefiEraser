@@ -29,9 +29,9 @@
     slow emulated disk without holding a large pool allocation. */
 #define FREESPACE_CHUNK_BYTES  (1024u * 1024u)
 
-/** Target size of one temp file. Smaller than Eraser's 216 MiB so that a small
-    volume still gets a useful number of files, and so a cancelled run leaves
-    less to clean up. The volume's own free space decides the real total. */
+/** Target size of one temp file. Deliberately modest so that a small volume
+    still gets a useful number of files, and so a cancelled run leaves less to
+    clean up. The volume's own free space decides the real total. */
 #define FREESPACE_FILE_UNIT    (64u * 1024u * 1024u)
 
 /** Upper bound on temp files per pass.
