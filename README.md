@@ -17,10 +17,14 @@
 
 | 文件 | 说明 |
 |---|---|
-| [UefiEraser-0.1.0.71-X64.efi](https://github.com/MikeWuPing/UefiEraser/releases/download/v0.1.0.71/UefiEraser-0.1.0.71-X64.efi) | 可直接运行的 UEFI 应用程序（X64，Debug 版，内置中文界面与字库） |
-| [UefiEraser-产品手册-0.1.0.71.docx](https://github.com/MikeWuPing/UefiEraser/releases/download/v0.1.0.71/UefiEraser-Manual-zh-0.1.0.71.docx) | 产品说明书（Word，含全部界面截图与功能详解） |
+| [UefiEraser-0.1.0.90-X64.efi](https://github.com/MikeWuPing/UefiEraser/releases/download/v0.1.0.90/UefiEraser-0.1.0.90-X64.efi) | 可直接运行的 UEFI 应用程序（X64，Debug 版，内置中文界面与字库） |
+| [UefiEraser-Manual-zh-0.1.0.90.docx](https://github.com/MikeWuPing/UefiEraser/releases/download/v0.1.0.90/UefiEraser-Manual-zh-0.1.0.90.docx) | 产品说明书（Word，含全部界面截图与功能详解） |
 
-最新版本见 [Releases](https://github.com/MikeWuPing/UefiEraser/releases)。把 `UefiEraser.efi`
+> **请用最新版。** 0.1.0.90 修掉了一个会中断擦除的缺陷：固件在启动镜像前挂了 5 分钟看门狗，
+> 交互式程序不会"返回"，于是每 5 分钟整机被复位一次——真盘擦除动辄数小时，会被拦腰打断。
+> **0.1.0.89 及更早的所有版本都有这个问题**，升级即修复。
+
+最新版永远在 [Releases](https://github.com/MikeWuPing/UefiEraser/releases)。把 `UefiEraser.efi`
 拷到 FAT 格式的 U 盘，开机从 U 盘启动进入 UEFI Shell 即可运行（Secure Boot 需关闭）。
 
 ## 它解决什么问题
@@ -82,6 +86,29 @@ UefiEraser 就跑在这个位置：开机、操作系统还没起来，固件把
 | 设备级擦除（ATA Secure Erase / NVMe Format NVM / NVMe Sanitize） | 灰显加锁 | ✅ |
 | 18 种扩展算法（国家保密局 BMB21-2019、强制性国标 GB 46864-2025、公安部 GA/T 1143-2014 等） | 灰显加锁 | ✅ |
 | 擦除合规证书、TCG Opal 加密擦除、HPA/DCO 隐藏区、批量队列、RAID / 多命名空间、资产信息采集、报告签名、OEM 定制 | — | ✅ |
+
+### Pro 版多出来的能力
+
+Free 版已经能把一块盘擦干净；Pro 版解决的是**"擦完要能交差"**：
+
+- **一份拿得出手的擦除证书。** 每次擦除生成 PDF 证书，写明盘的型号与序列号、算法与遍数、
+  起止时间、写入字节数，可数字签名、可验真。交给审计、客户或资产报废流程，
+  比一张进度截图有说服力得多。
+- **SSD 与自加密盘交给固件擦。** ATA Secure Erase、NVMe Format NVM、NVMe Sanitize，
+  覆盖预留区与退役块；TCG Opal 自加密盘走 Crypto Erase——只换密钥、不写全盘，
+  量大时快得不是一点。
+- **国内合规标准全覆盖。** 18 种扩展算法，含国家保密局 **BMB21-2019**、强制性国标
+  **GB 46864-2025**、公安部 **GA/T 1143-2014** 等（Free 版里也能看到名录与发布机构，
+  选中会说明属于哪个版本）。
+- **批量作业不用人守着。** 擦除队列连续处理几十块盘；支持 PXE 网启部署、无人值守自动
+  擦除、报告集中回传——适合机房、回收站、数据销毁服务商。
+- **盘上的"暗格"一起清。** HPA / DCO 隐藏区的检测与清除；硬件 RAID、SAS、
+  NVMe 多命名空间的逐命名空间处理。
+- **资产台账与 OEM 集成。** 自动采集盘的信息导出 CSV/JSON；可配置报告签名策略；
+  按需嵌入单位 logo 与证书编号规则、界面与报告多语言。
+
+Pro 版按机器授权、源码不公开。洽谈请联系
+[@MikeWuPing](https://github.com/MikeWuPing)。
 
 Free 版里这些能力**看得见、点不动**：灰显加锁、标注发布机构，点它会说明属于哪个版本，
 不会静默失败，也不会执行任何写盘动作。下面是 Free 版算法选择器的下半部分——一屏就能
@@ -302,10 +329,16 @@ GPLv3，仅作对照参考、不参与编译、不含在本仓内。
 
 | File | What it is |
 |---|---|
-| [UefiEraser-0.1.0.71-X64.efi](https://github.com/MikeWuPing/UefiEraser/releases/download/v0.1.0.71/UefiEraser-0.1.0.71-X64.efi) | the ready-to-run UEFI application (X64, debug build, Chinese UI and font baked in) |
-| [UefiEraser-产品手册-0.1.0.71.docx](https://github.com/MikeWuPing/UefiEraser/releases/download/v0.1.0.71/UefiEraser-Manual-zh-0.1.0.71.docx) | the product manual (Word, with every screen illustrated) |
+| [UefiEraser-0.1.0.90-X64.efi](https://github.com/MikeWuPing/UefiEraser/releases/download/v0.1.0.90/UefiEraser-0.1.0.90-X64.efi) | the ready-to-run UEFI application (X64, debug build, Chinese UI and font baked in) |
+| [UefiEraser-Manual-zh-0.1.0.90.docx](https://github.com/MikeWuPing/UefiEraser/releases/download/v0.1.0.90/UefiEraser-Manual-zh-0.1.0.90.docx) | the product manual (Word, with every screen illustrated) |
 
-See [Releases](https://github.com/MikeWuPing/UefiEraser/releases) for the latest version.
+> **Take the latest build.** 0.1.0.90 fixes a defect that could cut an erase short: the
+> firmware arms a five-minute watchdog before handing control to an image and only
+> disarms it when the image returns. An interactive app never returns, so the machine
+> cold-reset every five minutes - a real disk takes hours. **Every build up to 0.1.0.89
+> has it**; upgrading is the fix.
+
+The newest build is always on [Releases](https://github.com/MikeWuPing/UefiEraser/releases).
 Copy `UefiEraser.efi` to a FAT-formatted USB stick, boot from it into the UEFI Shell and
 run it (Secure Boot must be off).
 
@@ -388,6 +421,34 @@ Two editions, **one interface** — the boundary is drawn on screen:
 | Device-level erase (ATA Secure Erase / NVMe Format NVM / NVMe Sanitize) | greyed + locked | yes |
 | 18 further algorithms (State Secrecy Bureau BMB21-2019, mandatory national standard GB 46864-2025, Ministry of Public Security GA/T 1143-2014, ...) | greyed + locked | yes |
 | Compliance certificate, TCG Opal crypto erase, HPA/DCO, batch queue, RAID / multi-namespace, asset inventory, signed reports, OEM branding | - | yes |
+
+### What the Pro edition adds
+
+Free already wipes a disk clean. Pro answers a different question: **can you prove it afterwards?**
+
+- **A compliance certificate you can hand over.** Every run produces a PDF naming the
+  drive model and serial number, the algorithm and pass count, start and end times and
+  bytes written - digitally signed and verifiable. Audits, customers and asset
+  write-off paperwork take that far more seriously than a screenshot.
+- **SSDs and self-encrypting drives erased by their own firmware.** ATA Secure Erase,
+  NVMe Format NVM and NVMe Sanitize cover over-provisioned and retired blocks; TCG Opal
+  drives go through Crypto Erase, which rekeys instead of rewriting every sector - at
+  fleet scale the difference is not subtle.
+- **Chinese regulatory standards covered.** 18 further algorithms, including State
+  Secrecy Bureau **BMB21-2019**, the mandatory national standard **GB 46864-2025** and
+  Ministry of Public Security **GA/T 1143-2014**. The Free build shows the roster and
+  the issuing body, and says which edition a row belongs to when selected.
+- **Batch work that does not need a babysitter.** Erase queues that run through dozens
+  of drives, PXE network deployment, unattended erasure and central report collection -
+  built for server rooms, recyclers and data-destruction services.
+- **The hidden regions go too.** HPA / DCO detection and clearing, plus hardware RAID,
+  SAS and NVMe multi-namespace handling, one namespace at a time.
+- **Asset inventory and OEM integration.** Collect drive details as CSV/JSON, configure
+  report signing policy, and optionally embed your own logo and certificate numbering
+  scheme, with localised UI and reports.
+
+Pro is licensed per machine and its source is not published. Get in touch via
+[@MikeWuPing](https://github.com/MikeWuPing).
 
 In the Free build these entries are **visible but locked**: greyed out, padlocked, labelled
 with the publishing body, and clicking one states which edition it belongs to rather than
