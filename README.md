@@ -3,8 +3,9 @@
 [English](#english)
 
 > 在操作系统启动之前，用鼠标和键盘对**整块物理磁盘**、**单个分区**或**分区的空闲空间**
-> 执行不可恢复的数据销毁。支持 13 种行业标准多遍覆写算法，以及 ATA Secure Erase /
-> NVMe Format / NVMe Sanitize 设备级擦除。
+> 执行不可恢复的数据销毁。免费开源版支持 12 种行业标准多遍覆写算法；设备级擦除
+> （ATA Secure Erase / NVMe Format NVM / NVMe Sanitize）与 18 种扩展算法属于
+> 商业版 Pro，见[版本](#版本)。
 
 ![UefiEraser 主界面](EraserPkg/Docs/Images/01-main.png)
 
@@ -39,9 +40,10 @@ UefiEraser 就跑在这个位置：开机、操作系统还没起来，固件把
 - **整盘粉碎**：覆写物理磁盘的全部 LBA，含分区表本身。
 - **分区粉碎**：覆写指定分区，**边界精确**——不会波及相邻分区（已用字节级断言证明）。
 - **空闲空间粉碎**：在不删除现有文件的前提下覆写分区中未使用的簇，消除已删除文件的残留。
-- **设备级擦除**：调用磁盘固件的 ATA Secure Erase / NVMe Format NVM / NVMe Sanitize，
-  覆盖包括预留区与退役块在内的全部物理区域（**SSD 唯一可靠的擦除方式**）。
-- **13 种行业标准覆写算法**（逐字节对照 Eraser 开源项目复刻）：伪随机 1 遍、
+- **设备级擦除（Pro 版）**：调用磁盘固件的 ATA Secure Erase / NVMe Format NVM /
+  NVMe Sanitize，覆盖包括预留区与退役块在内的全部物理区域（**SSD 唯一可靠的擦除
+  方式**）。Free 版里这一项灰显加锁——看得见，点不动。
+- **12 种行业标准覆写算法**（逐字节对照 Eraser 开源项目复刻）：
   US DoD 5220.22-M（3 遍）/ DoD 5220.22-M ECE（7 遍）、Gutmann（35 遍）、Schneier（7 遍）、
   英国 HMG IS5 基础/增强、加拿大 RCMP TSSIT OPS-II、德国 VSITR、俄罗斯 GOST P50739-95、
   美国陆军 AR 380-19、美国空军 5020，以及自定义随机 N 遍。
@@ -66,6 +68,32 @@ UefiEraser 就跑在这个位置：开机、操作系统还没起来，固件把
   擦除进行中自动关掉玻璃层，避免进度条每个采样窗都脏整屏。
 - **注意 Ctrl+Alt+Del**：固件把它当复位键、且走键盘通知通道，应用拦不住——擦除中途按它整机会
   重启。中止请用进度对话框的「取消」。
+
+## 版本
+
+两个版本，**同一套界面**，能力边界直接画在界面上：
+
+| 能力 | Free（开源） | Pro（商业授权） |
+|---|---|---|
+| 整盘 / 分区 / 空闲空间粉碎 | ✅ | ✅ |
+| 12 种标准覆写算法 + 自定义 N 遍 | ✅ | ✅ |
+| 四道确认闸门、末遍读回校验、审计日志与报告导出 | ✅ | ✅ |
+| 无界面模式（命令行 / 配置文件） | ✅ | ✅ |
+| 设备级擦除（ATA Secure Erase / NVMe Format NVM / NVMe Sanitize） | 灰显加锁 | ✅ |
+| 18 种扩展算法（国家保密局 BMB21-2019、强制性国标 GB 46864-2025、公安部 GA/T 1143-2014 等） | 灰显加锁 | ✅ |
+| 擦除合规证书、TCG Opal 加密擦除、HPA/DCO 隐藏区、批量队列、RAID / 多命名空间、资产信息采集、报告签名、OEM 定制 | — | ✅ |
+
+Free 版里这些能力**看得见、点不动**：灰显加锁、标注发布机构，点它会说明属于哪个版本，
+不会静默失败，也不会执行任何写盘动作。下面是 Free 版算法选择器的下半部分——一屏就能
+看清 Pro 覆盖到哪些标准：
+
+![Pro 版算法名录](EraserPkg/Docs/Images/16-pro-algo-roster.png)
+
+完整清单从工具栏的 `Pro 功能…` 打开：
+
+| Pro 功能一览 | 点 Pro 名录里的行 |
+|---|---|
+| ![Pro 功能一览](EraserPkg/Docs/Images/17-pro-features.png) | ![版本提示](EraserPkg/Docs/Images/18-pro-notice.png) |
 
 ## 界面
 
@@ -122,7 +150,7 @@ USAF 5020 的三遍。
 
 **多遍覆写对固态硬盘不可靠**。SSD 的 FTL 与磨损均衡会把写入重映射到不同的物理块，覆写逻辑
 地址无法保证覆盖原数据。**固态盘请使用设备级擦除（ATA Secure Erase / NVMe Sanitize）**——
-在算法选择器的下半部分可切换。
+它属于 **Pro 版**，在 Free 版的算法选择器下方灰显加锁。
 
 ## 快速开始
 
@@ -142,7 +170,7 @@ FS0:\> UefiEraser.efi
 ```
 FS0:\> UefiEraser.efi erase=disk:0 algo=gutmann verify
 FS0:\> UefiEraser.efi erase=part:0:2 algo=dod522022m
-FS0:\> UefiEraser.efi erase=freespace:0:1 algo=random
+FS0:\> UefiEraser.efi erase=freespace:0:1 algo=dod522022m
 FS0:\> UefiEraser.efi erase=ata:0
 FS0:\> UefiEraser.efi erase=nvme-format:0:1
 FS0:\> UefiEraser.efi erase=nvme-sanitize:0:1
@@ -224,10 +252,10 @@ build -p EraserPkg/EraserPkg.dsc -a X64 -t VS2019 -b DEBUG
 |---|---|
 | 分区擦除（DoD 5220.22-M，3 遍，开校验） | `passes=3/3 written=31457280 verified=1 mismatches=0`；边界断言通过，非目标的分区 1、分区 3 各 10 MB 逐字节未动 |
 | 整盘擦除（HMG IS5 Baseline，1 遍，开校验） | `passes=1/1 written=67108864 verified=1 mismatches=0`；全 0x00，LBA 1 上 `EFI PART` 签名消失 |
-| 空闲空间擦除（伪随机 1 遍） | 残留标记清零，活跃文件（含 SHA256）完好，无临时文件遗留，FAT 元数据完好 |
+| 空闲空间擦除（单遍随机，自定义 1 遍） | 残留标记清零，活跃文件（含 SHA256）完好，无临时文件遗留，FAT 元数据完好 |
 | 设备级擦除（QEMU 虚拟盘） | 路径正确到达固件擦除层；虚拟盘不实现 Security feature set，返回原因明确的失败 |
 
-Core 算法层带 360 项宿主机断言（算法表、遍次填充、Gutmann 35 遍逐字节、块边界相位、
+Core 算法层带 341 项宿主机断言（算法表、遍次填充、Gutmann 35 遍逐字节、块边界相位、
 取消、校验）。
 
 ## 目录
@@ -261,8 +289,9 @@ GPLv3，仅作对照参考、不参与编译、不含在本仓内。
 
 > A graphical data-destruction tool that runs before any operating system boots:
 > wipe **a whole physical disk**, **a single partition**, or **a volume's free space**
-> with 13 industry-standard multi-pass overwrite algorithms, or hand the job to the
-> drive firmware via ATA Secure Erase / NVMe Format / NVMe Sanitize.
+> with 12 industry-standard multi-pass overwrite algorithms. Device-level erase
+> (ATA Secure Erase / NVMe Format NVM / NVMe Sanitize) and 18 further algorithms
+> belong to the commercial Pro edition - see [Editions](#editions).
 
 ![UefiEraser main window](EraserPkg/Docs/Images/01-main.png)
 
@@ -303,14 +332,16 @@ hands over every disk as a plain block device.
   neighbouring partitions are untouched (proven byte by byte by the host assertions).
 - **Free-space shred** — overwrites the unused clusters of a volume without deleting
   existing files, destroying remnants of already-deleted files.
-- **Device-level erase** — ATA Secure Erase / NVMe Format NVM / NVMe Sanitize, run by
-  the drive firmware over every physical region including over-provisioning and
-  retired blocks (**the only reliable method for SSDs**).
-- **13 industry-standard overwrite algorithms**, reproduced byte for byte against the
-  Eraser project: pseudorandom (1 pass), US DoD 5220.22-M (3), DoD 5220.22-M ECE (7),
-  Gutmann (35), Schneier (7), British HMG IS5 Baseline/Enhanced, Canadian RCMP TSSIT
-  OPS-II, German VSITR, Russian GOST P50739-95, US Army AR 380-19, US Air Force 5020,
-  plus a custom N-pass random method.
+- **Device-level erase (Pro edition)** — ATA Secure Erase / NVMe Format NVM /
+  NVMe Sanitize, run by the drive firmware over every physical region including
+  over-provisioning and retired blocks (**the only reliable method for SSDs**).
+  In the Free build this entry is greyed out and padlocked: visible, not usable.
+- **12 industry-standard overwrite algorithms**, reproduced byte for byte against the
+  Eraser project: US DoD 5220.22-M (3), DoD 5220.22-M ECE (7), Gutmann (35),
+  Schneier (7), British HMG IS5 Baseline/Enhanced, Canadian RCMP TSSIT OPS-II,
+  German VSITR, Russian GOST P50739-95, US Army AR 380-19, US Air Force 5020,
+  plus a custom N-pass random method. Hovering a row shows what the method is and
+  the full pass sequence.
 - **Optional read-back verification** of the last pass — every byte read back and
   compared against a replay of that pass's generator.
 - **Five safety gates** — read-only devices cannot be selected → the boot volume (and
@@ -343,6 +374,32 @@ hands over every disk as a plain block device.
 - **Ctrl+Alt+Del resets the whole machine** — the firmware handles that combination
   through the console's key-notification channel, so an application cannot swallow it;
   it will interrupt an erasure mid-pass. Use the progress dialog's 取消 / Cancel instead.
+
+## Editions
+
+Two editions, **one interface** — the boundary is drawn on screen:
+
+| | Free (open source) | Pro (commercial) |
+|---|---|---|
+| Whole-disk / partition / free-space shred | yes | yes |
+| 12 standard overwrite algorithms + custom N passes | yes | yes |
+| Four confirmation gates, last-pass read-back, audit log, report export | yes | yes |
+| Headless mode (command line / config file) | yes | yes |
+| Device-level erase (ATA Secure Erase / NVMe Format NVM / NVMe Sanitize) | greyed + locked | yes |
+| 18 further algorithms (State Secrecy Bureau BMB21-2019, mandatory national standard GB 46864-2025, Ministry of Public Security GA/T 1143-2014, ...) | greyed + locked | yes |
+| Compliance certificate, TCG Opal crypto erase, HPA/DCO, batch queue, RAID / multi-namespace, asset inventory, signed reports, OEM branding | - | yes |
+
+In the Free build these entries are **visible but locked**: greyed out, padlocked, labelled
+with the publishing body, and clicking one states which edition it belongs to rather than
+failing silently. The lower half of the algorithm picker shows the whole roster:
+
+![Pro algorithm roster](EraserPkg/Docs/Images/16-pro-algo-roster.png)
+
+The full list opens from the toolbar's `Pro 功能…` button:
+
+| The Pro roster | Clicking a locked row |
+|---|---|
+| ![Pro roster](EraserPkg/Docs/Images/17-pro-features.png) | ![Edition notice](EraserPkg/Docs/Images/18-pro-notice.png) |
 
 ## Interface
 
@@ -404,8 +461,8 @@ published order.
 **Multi-pass overwriting is not reliable on solid-state drives.** The FTL and wear
 levelling remap writes to different physical blocks, so overwriting a logical address
 does not guarantee the original data was covered. **Use device-level erase (ATA Secure
-Erase / NVMe Sanitize) on SSDs** — switch to it in the lower half of the algorithm
-picker.
+Erase / NVMe Sanitize) on SSDs** — it belongs to the **Pro edition** and is greyed
+out and padlocked below the algorithm list in the Free build.
 
 ## Quick start
 
@@ -427,7 +484,7 @@ picker.
 ```
 FS0:\> UefiEraser.efi erase=disk:0 algo=gutmann verify
 FS0:\> UefiEraser.efi erase=part:0:2 algo=dod522022m
-FS0:\> UefiEraser.efi erase=freespace:0:1 algo=random
+FS0:\> UefiEraser.efi erase=freespace:0:1 algo=dod522022m
 FS0:\> UefiEraser.efi erase=ata:0
 FS0:\> UefiEraser.efi erase=nvme-format:0:1
 FS0:\> UefiEraser.efi erase=nvme-sanitize:0:1
@@ -515,7 +572,7 @@ Things worth knowing:
 |---|---|
 | Partition erase (DoD 5220.22-M, 3 passes, verification on) | `passes=3/3 written=31457280 verified=1 mismatches=0`; boundary assertions pass and the non-target partitions (10 MB each) are unchanged byte for byte |
 | Whole-disk erase (HMG IS5 Baseline, 1 pass, verification on) | `passes=1/1 written=67108864 verified=1 mismatches=0`; all `0x00`, the `EFI PART` signature is gone from LBA 1 |
-| Free-space erase (pseudorandom, 1 pass) | residue markers cleared, live files intact (SHA256 checked), no temp files left behind, FAT metadata intact |
+| Free-space erase (single random pass, custom 1 pass) | residue markers cleared, live files intact (SHA256 checked), no temp files left behind, FAT metadata intact |
 | Device-level erase (QEMU virtual disk) | the path reaches the firmware erase layer; the virtual disk implements no Security feature set, so it fails with a stated reason |
 
 The Core algorithm layer carries 360 host-side assertions (algorithm table, pass filling,
